@@ -1,0 +1,36 @@
+{
+  "name": "shmile-ui",
+  "homepage": "https://github.com/andrewhao/shmile-ui",
+  "authors": [
+    "Andrew Hao <andrewhao@gmail.com>"
+  ],
+  "description": "shmile photobooth JS frontend",
+  "keywords": [
+    "photobooth",
+    "backbone"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "raphael": "dbe241f4c5310dd9bf3b451c538d78c6c4a0e288",
+    "javascript-state-machine": "~2.3.3",
+    "underscore": "~1.7.0",
+    "backbone": "~1.1.2"
+  },
+  "_release": "f546454667",
+  "_resolution": {
+    "type": "commit",
+    "commit": "f5464546679c797636b0dc0bcaecc1b5e6b81bdb"
+  },
+  "_source": "https://github.com/andrewhao/shmile-ui.git",
+  "_target": "f5464546679c797636b0dc0bcaecc1b5e6b81bdb",
+  "_originalSource": "andrewhao/shmile-ui"
+}
