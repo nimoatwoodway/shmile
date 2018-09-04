@@ -272,7 +272,7 @@ var PhotoView = Backbone.View.extend({
     /**
      * Draws a modal with some text.
      */
-    modalMessage: function (text, persistTime, animateSpeed, cb) {
+    modalMessage: function (text, persistTime, animateSpeed, cb, fontSize) {
         if (animateSpeed === undefined) {
             var animateSpeed = 200;
         }
