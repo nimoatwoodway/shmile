@@ -6,6 +6,7 @@ fs = require "fs"
 yaml = require "yaml"
 dotenv = require "dotenv"
 exec = require("child_process").exec
+EventEmitter = require("events").EventEmitter
 
 dotenv.load()
 console.log("printer is: #{process.env.PRINTER_ENABLED}")
@@ -37,11 +38,16 @@ exp.get "/gallery", (req, res) ->
     extra_css: ["photoswipe/photoswipe"]
     image_paths: PhotoFileUtils.composited_images(true)
 
+
 # FIXME/ahao This global state is no bueno.
 State = image_src_list: []
 
 ccKlass = if process.env['STUB_CAMERA'] is "true" then StubCameraControl else CameraControl
 camera = new ccKlass().init()
+
+exp.get "/click", (req, res) ->
+  camera.emit('click')
+  res.send("Clicked")
 
 camera.on "photo_saved", (filename, path, web_url) ->
   State.image_src_list.push path
@@ -65,6 +71,9 @@ io.sockets.on "connection", (websocket) ->
 
   websocket.on "snap", () ->
     camera.emit "snap"
+
+  camera.on "click", () ->
+    websocket.emit "click"
 
   websocket.on "all_images", ->
 

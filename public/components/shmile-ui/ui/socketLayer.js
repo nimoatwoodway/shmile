@@ -47,4 +47,9 @@ SocketLayer.prototype.register = function(fsm) {
     console.log('photo_saved evt: ' + data.filename);
     self.fsm.photo_saved(data);
   });
+
+  this.proxy.on('click', function(data) {
+    console.log('click event fired');
+    $(document).click();
+  });
 }
