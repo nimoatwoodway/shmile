@@ -96,4 +96,5 @@ io.sockets.on "connection", (websocket) ->
 
   websocket.on "print", () ->
     sys.puts "Print that thing"
-    exec "lpr -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" #{State.for_print_output_file_path}"
+    sys.puts "/usr/bin/lpr -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" #{State.for_print_output_file_path}"
+    exec "/usr/bin/lpr -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" #{State.for_print_output_file_path}"
