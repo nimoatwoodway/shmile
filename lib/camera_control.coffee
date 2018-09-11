@@ -26,6 +26,7 @@ class CameraControl
       capture = spawn("gphoto2", [ "--capture-image-and-download",
                                    "--force-overwrite",
                                    "--keep-raw",
+                                   "--set-config capturetarget=1",
                                    "--filename=" + @filename ],
         cwd: @cwd
       )
