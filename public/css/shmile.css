@@ -3,6 +3,10 @@
  * @author andrewhao
  */
 
+html, body {
+    overflow: hidden;
+}
+
 body {
     background-color: #333;
     text-align: center;
