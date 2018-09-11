@@ -13,19 +13,20 @@ class CameraControl
   saving_regex: /Saving file as ([^.jpg]+)/g
   captured_success_regex: /New file is in/g
 
-  constructor: (
-    @filename="%m-%y-%d_%H:%M:%S.jpg",
-    @cwd="public/photos",
-    @web_root_path="/photos") ->
+  constructor: (@filename = "%m-%y-%d_%H:%M:%S.jpg",
+    @cwd = "public/photos",
+    @web_root_path = "/photos") ->
 
   init: ->
     exec "killall PTPCamera"
     emitter = new EventEmitter()
     emitter.on "snap", (onCaptureSuccess, onSaveSuccess) =>
       emitter.emit "camera_begin_snap"
-      capture = spawn("gphoto2", [ "--capture-image-and-download",
-                                   "--force-overwrite",
-                                   "--filename=" + @filename ],
+      capture = spawn("gphoto2", ["--capture-image-and-download",
+        "--force-overwrite",
+        "--keep-raw",
+        "--set-config capturetarget=1",
+        "--filename=" + @filename],
         cwd: @cwd
       )
       capture.stdout.on "data", (data) =>
