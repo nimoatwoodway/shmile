@@ -96,5 +96,11 @@ io.sockets.on "connection", (websocket) ->
 
   websocket.on "print", () ->
     sys.puts "Print that thing"
-    sys.puts "/usr/bin/lpr -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" #{State.for_print_output_file_path}"
-    exec "/usr/bin/lpr -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" #{State.for_print_output_file_path}"
+    interval = setInterval ()->
+      if State.for_print_output_file_path?
+        sys.puts "/usr/bin/lp -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" /home/pi/shmile/#{State.for_print_output_file_path}"
+        exec "/usr/bin/lp -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" /home/pi/shmile/#{State.for_print_output_file_path}"
+        delete State.for_print_output_file_path
+        clearInterval interval
+    , 2000
+
