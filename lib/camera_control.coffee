@@ -35,6 +35,7 @@ class CameraControl
           onCaptureSuccess() if onCaptureSuccess?
 
         saving = @saving_regex.exec(data.toString())
+        console.log(saving)
         if saving
           fname = saving[1] + ".jpg"
           emitter.emit(
