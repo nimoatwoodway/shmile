@@ -8,7 +8,4 @@ var AppState = function() {
 AppState.prototype.reset = function() {
   this.current_frame_idx = 0;
   this.zoomed = null;
-
-  //reload page for performance
-  location.reload();
 }

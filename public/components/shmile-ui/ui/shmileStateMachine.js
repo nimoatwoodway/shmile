@@ -101,7 +101,13 @@ var ShmileStateMachine = function (photoView, socket, appState, config, buttonVi
                     //remove click handler
                     console.log('delete listener');
                     $(window).unbind('click');
-                    self.photoView.slideInNext();
+
+                  /**
+                   * Instead of loading next slide, do a reload
+                   * for garbage collection.
+                   */
+                  //self.photoView.slideInNext();
+                  location.reload();
                 });
             },
             onchangestate: function (e, f, t) {
