@@ -1,24 +1,28 @@
-
 // Everything required to set up the app.
-$(window).ready(function() {
-  var socketProxy = new SocketProxy();
-  var appState = new AppState();
+$(window).ready(function () {
 
-  window.io = window.io || undefined;
+  //little timeout e.g. chrome startup is not fast enough and widh and height are not set correctly
+  setTimeout(function() {
+    console.log('start');
+    var socketProxy = new SocketProxy();
+    var appState = new AppState();
 
-  window.p = new PhotoView(window.Config, appState);
-  bv = new ButtonView();
+    window.io = window.io || undefined;
 
-  var ssm = new ShmileStateMachine(window.p, socketProxy, appState, window.Config, bv)
+    window.p = new PhotoView(window.Config, appState);
+    bv = new ButtonView();
 
-  bv.fsm = ssm.fsm
+    var ssm = new ShmileStateMachine(window.p, socketProxy, appState, window.Config, bv)
 
-  var layer = new SocketLayer(window.io, socketProxy)
-  layer.init();
-  layer.register(ssm.fsm);
+    bv.fsm = ssm.fsm
 
-  window.socketProxy = socketProxy
+    var layer = new SocketLayer(window.io, socketProxy)
+    layer.init();
+    layer.register(ssm.fsm);
 
-  bv.render();
-  p.render();
+    window.socketProxy = socketProxy
+
+    bv.render();
+    p.render();
+  }, 500)
 });

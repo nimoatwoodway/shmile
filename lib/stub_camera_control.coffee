@@ -27,6 +27,9 @@ class StubCameraControl
       # no-op
       @emitter.emit "camera_snapped"
 
+      console.log(@photoFixturePath())
+      console.log(@photoPath())
+
       fs.copySync(
         @photoFixturePath(),
         @photoPath()

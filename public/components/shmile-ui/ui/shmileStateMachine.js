@@ -97,7 +97,7 @@ var ShmileStateMachine = function (photoView, socket, appState, config, buttonVi
                     $(this).unbind('click');
                 });
 
-                self.photoView.modalMessage('Sehr schön! Drücke erneut um das Bild zu drucken!', 10000, 200, function () {
+                self.photoView.modalMessageBig('Drücke erneut um das Bild zu drucken!', 10000, 200, function () {
                     //remove click handler
                     console.log('delete listener');
                     $(window).unbind('click');
