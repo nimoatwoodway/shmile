@@ -21,6 +21,7 @@ class CameraControl
     exec "killall PTPCamera"
     emitter = new EventEmitter()
     emitter.on "snap", (onCaptureSuccess, onSaveSuccess) =>
+      console.log('test2')
       emitter.emit "camera_begin_snap"
       capture = spawn("gphoto2", ["--capture-image-and-download",
         "--force-overwrite",
