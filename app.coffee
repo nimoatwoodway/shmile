@@ -98,8 +98,8 @@ io.sockets.on "connection", (websocket) ->
     sys.puts "Print that thing"
     interval = setInterval ()->
       if State.for_print_output_file_path?
-        sys.puts "/usr/bin/lp -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" /home/pi/shmile/#{State.for_print_output_file_path}"
         exec "/usr/bin/lp -o #{process.env.PRINTER_IMAGE_ORIENTATION} -o media=\"#{process.env.PRINTER_MEDIA}\" /home/pi/shmile/#{State.for_print_output_file_path}"
+        exec "cp /home/pi/shmile/#{State.for_print_output_file_path} /home/pi/Nextcloud/Hochzeit"
         delete State.for_print_output_file_path
         clearInterval interval
     , 2000
