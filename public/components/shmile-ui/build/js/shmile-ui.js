@@ -675,27 +675,22 @@ var ButtonView = function (fsm) {
 ButtonView.prototype.render = function () {
     var self = this;
     // init code
-    //this.startButton = $('button#start-button');
-    //var buttonX = (Config.window_width - this.startButton.outerWidth())/2;
-    //var buttonY = (Config.window_height - this.startButton.outerHeight())/2;
+    this.startButton = $('button#start-button');
+    var buttonX = (Config.window_width - this.startButton.outerWidth())/2;
+    var buttonY = (Config.window_height - this.startButton.outerHeight())/2;
 
-    //this.startButton.hide();
+    this.startButton.hide();
 
     // Position the start button in the center
-    //this.startButton.css({'top': buttonY, 'left': buttonX});
+    this.startButton.css({'top': buttonY, 'left': buttonX});
 
     //var buttonTriggerEvt = Config.is_mobile ? "touchend" : "click";
-
-    /*this.startButton.bind(buttonTriggerEvt, function(e) {
-      var button = $(e.currentTarget);
-      button.fadeOut(1000);
-      $(document).trigger('ui_button_pressed');
-    });*/
 
     //trigger on mouse click
     $(document).bind('click', function () {
         $(document).trigger('ui_button_pressed');
         $(this).unbind('click');
+        this.startButton.hide();
     });
 
     $(document).bind('ui_button_pressed', function () {
@@ -703,9 +698,9 @@ ButtonView.prototype.render = function () {
         self.fsm.ui_button_pressed();
     });
 }
-// ButtonView.prototype.fadeIn = function() {
-//   this.startButton.fadeIn();
-// }
+ ButtonView.prototype.fadeIn = function() {
+  this.startButton.fadeIn();
+}
 
 // Everything required to set up the app.
 $(window).ready(function () {
