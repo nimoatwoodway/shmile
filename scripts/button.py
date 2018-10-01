@@ -20,7 +20,7 @@ import time
 import RPi.GPIO as GPIO
 import urllib2
 
-PIN = 18
+PIN = 23
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
