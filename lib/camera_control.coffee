@@ -25,7 +25,8 @@ class CameraControl
       emitter.emit "camera_begin_snap"
       capture = spawn("gphoto2", [ "--capture-image-and-download",
                                    "--force-overwrite",
-                                   "--set-config capturetarget=1",
+                                   "--set-config",
+                                   "capturetarget=1",
                                    "--keep-raw",
                                    "--filename=" + @filename ],
         cwd: @cwd
