@@ -37,7 +37,11 @@ while True:
     print length
 
     if length > 10:
-        print "Long Press"
+        print "10 Sec. Press"
+        from subprocess import call
+	call("sudo shutdown -h now", shell=True)
+    if length > 5:
+        print "5 Sec. Press"
         from subprocess import call
 	call("sudo shutdown -r now", shell=True)
     else:

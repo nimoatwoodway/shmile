@@ -19,6 +19,11 @@ ImageCompositor = require("./lib/image_compositor")
 exp = express()
 web = http.createServer(exp)
 
+setInterval ->
+  console.log("Im alive: #{process.pid}");
+  exec "/bin/systemd-notify --pid=#{process.pid} WATCHDOG=1"
+, 5000
+
 exp.configure ->
   exp.set "views", __dirname + "/views"
   exp.set "view engine", "jade"

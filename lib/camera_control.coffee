@@ -39,13 +39,17 @@ class CameraControl
         saving = @saving_regex.exec(data.toString())
         if saving
           fname = saving[1] + ".jpg"
+          cwd = @cwd
+          web_root_path = @web_root_path
+
+          #exec "/home/pi/shmile/scripts/crossprocess.sh -r 20 -g 20 -b 10 " + @cwd + "/" + fname + " " + @cwd + "/" + fname, (error, stderr, stdout) ->
           emitter.emit(
             "photo_saved",
             fname,
-            @cwd + "/" + fname,
-            @web_root_path + "/" + fname
+            cwd + "/" + fname,
+            web_root_path + "/" + fname
           )
           onSaveSuccess() if onSaveSuccess?
-    emitter
+          emitter
 
 module.exports = CameraControl

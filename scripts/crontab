@@ -1,0 +1,1 @@
+@reboot sudo python /home/pi/shmile/scripts/button.py > /home/pi/button.log

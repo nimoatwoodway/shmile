@@ -63,7 +63,7 @@ class ImageCompositor
         im.convert resizeCompressArgs, (e, out, err) ->
           throw err  if err
           emitter.emit "generated_thumb", FINAL_OUTPUT_THUMB_PATH
-
+          exec "/home/pi/shmile/scripts/crossprocess.sh -r 20 -g 20 -b 10 #{FINAL_OUTPUT_THUMB_PATH} #{FINAL_OUTPUT_THUMB_PATH}"
     emitter
 
 module.exports = ImageCompositor
