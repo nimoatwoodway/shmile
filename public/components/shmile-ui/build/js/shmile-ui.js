@@ -190,7 +190,7 @@ var ShmileStateMachine = function (photoView, socket, appState, config, buttonVi
           printtext.remove();
           isPrinting = true;
 
-          self.photoView.modalMessageBig('Dein Bild wird gedruckt, bitte einen Augenblick geduld!', 15000, 200, function () {
+          self.photoView.modalMessageBig('Bild wird gedruckt, einen Augenblick geduld!', 15000, 200, function () {
 
             //remove click handler
             console.log('delete listener');
