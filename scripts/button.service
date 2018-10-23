@@ -1,0 +1,12 @@
+[Unit]
+Description=Button for Photobooth
+After=multi-user.target
+ 
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/pi/shmile/scripts/button.py
+Restart=on-abort
+StandardOutput=syslog
+ 
+[Install]
+WantedBy=multi-user.target
