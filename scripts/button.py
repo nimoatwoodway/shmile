@@ -46,4 +46,7 @@ while True:
 	call("sudo shutdown -r now", shell=True)
     else:
         print "Short Press"
-        urllib2.urlopen('http://localhost:3000/click')
+        try:
+            urllib2.urlopen('http://localhost:3000/click')
+        except Exception:
+            pass
