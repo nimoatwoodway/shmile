@@ -36,7 +36,7 @@ class ImageCompositor
       for i in [0..@img_src_list.length-1] by 1
         convertArgs.push @img_src_list[i]
         convertArgs.push "-geometry"
-        convertArgs.push GEOMETRIES[i]
+        convertArgs.push "1200x800+50+900"
         convertArgs.push "-composite"
       convertArgs.push OUTPUT_PATH
 
