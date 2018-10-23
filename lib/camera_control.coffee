@@ -42,7 +42,7 @@ class CameraControl
           cwd = @cwd
           web_root_path = @web_root_path
 
-          #exec "/home/pi/shmile/scripts/crossprocess.sh -r 20 -g 20 -b 10 " + @cwd + "/" + fname + " " + @cwd + "/" + fname, (error, stderr, stdout) ->
+          exec "/home/pi/shmile/scripts/crossprocess.sh -r 20 -g 20 -b 10 " + @cwd + "/" + fname + " " + @cwd + "/" + fname, (error, stderr, stdout) ->
           emitter.emit(
             "photo_saved",
             fname,
