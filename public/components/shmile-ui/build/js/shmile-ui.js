@@ -142,7 +142,7 @@ var ShmileStateMachine = function (photoView, socket, appState, config, buttonVi
           self.photoView.modalMessageBig('Die Kamera konnte kein Bild aufnehmen, bitte versuche es erneut!', 8000, 200, function () {
             location.reload();
           });
-        }, 10000)
+        }, 15000)
 
       },
       onphoto_saved: function (e, f, t, data) {
