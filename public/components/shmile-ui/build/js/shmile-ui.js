@@ -49,7 +49,7 @@ var Config = {
   next_delay: 10000,
   cheese_delay: 400,
   flash_duration: 1000,
-  ready_delay: 2000,
+  ready_delay: 3000,
   nice_delay: 5000,
 
   // The amount of time we should pause between each frame shutter
@@ -59,7 +59,7 @@ var Config = {
   between_snap_delay: 1000,
 
   // For usability enhancements on iPad, set this to "true"
-  is_mobile: false
+  is_mobile: true
 }
 
 /**
@@ -96,101 +96,141 @@ AppState.prototype.reset = function() {
  * @param [Config] config     The configuration options passed to the app
  */
 var ShmileStateMachine = function (photoView, socket, appState, config, buttonView) {
-    this.photoView = photoView;
-    this.socket = socket;
-    this.appState = appState;
-    this.config = config;
-    this.buttonView = buttonView
+  this.photoView = photoView;
+  this.socket = socket;
+  this.appState = appState;
+  this.config = config;
+  this.buttonView = buttonView
 
-    var self = this;
+  var self = this;
+  isPrinting = false;
 
-    this.fsm = StateMachine.create({
-        initial: 'loading',
-        events: [
-            {name: 'connected', from: 'loading', to: 'ready'},
-            {name: 'ui_button_pressed', from: 'ready', to: 'waiting_for_photo'},
-            {name: 'photo_saved', from: 'waiting_for_photo', to: 'review_photo'},
-            {name: 'photo_updated', from: 'review_photo', to: 'next_photo'},
-            {name: 'continue_partial_set', from: 'next_photo', to: 'waiting_for_photo'},
-            {name: 'finish_set', from: 'next_photo', to: 'review_composited'},
-            {name: 'next_set', from: 'review_composited', to: 'ready'}
-        ],
-        callbacks: {
-            onconnected: function () {
-                self.photoView.animate('in', function () {
-                    //self.buttonView.fadeIn();
-                });
-            },
-            onenterready: function () {
-                self.photoView.resetState();
-            },
-            onleaveready: function () {
-            },
-            onenterwaiting_for_photo: function (e) {
-                cheeseCb = function () {
-                    self.photoView.modalMessage('Cheese!', self.config.cheese_delay);
-                    self.photoView.flashStart();
-                    self.socket.emit('snap', true);
-                }
-                CameraUtils.snap(self.appState.current_frame_idx, cheeseCb);
-            },
-            onphoto_saved: function (e, f, t, data) {
-                // update UI
-                // By the time we get here, the idx has already been updated!!
-                self.photoView.flashEnd();
-                self.photoView.updatePhotoSet(data.web_url, self.appState.current_frame_idx, function () {
-                    setTimeout(function () {
-                        self.fsm.photo_updated();
-                    }, self.config.between_snap_delay)
-                });
-            },
-            onphoto_updated: function (e, f, t) {
-                self.photoView.flashEnd();
-                // We're done with the full set.
-                if (self.appState.current_frame_idx == 3) {
-                    self.fsm.finish_set();
-                }
-                // Move the frame index up to the next frame to update.
-                else {
-                    self.appState.current_frame_idx = (self.appState.current_frame_idx + 1) % 4
-                    self.fsm.continue_partial_set();
-                }
-            },
-            onenterreview_composited: function (e, f, t) {
-                self.socket.emit('composite');
-                self.photoView.showOverlay(true);
-                setTimeout(function () {
-                    self.fsm.next_set()
-                }, self.config.next_delay);
-            },
-            onleavereview_composited: function (e, f, t) {
-                // Clean up
-                self.photoView.animate('out');
-                console.log('Drucken?');
-
-                $(window).bind('click', function () {
-                    self.socket.emit('print', true);
-                    $(this).unbind('click');
-                });
-
-                self.photoView.modalMessageBig('Drücke erneut um das Bild zu drucken!', 10000, 200, function () {
-                    //remove click handler
-                    console.log('delete listener');
-                    $(window).unbind('click');
-
-                  /**
-                   * Instead of loading next slide, do a reload
-                   * for garbage collection.
-                   */
-                  //self.photoView.slideInNext();
-                  location.reload();
-                });
-            },
-            onchangestate: function (e, f, t) {
-                console.log('fsm received event ' + e + ', changing state from ' + f + ' to ' + t)
-            }
+  this.fsm = StateMachine.create({
+    initial: 'loading',
+    events: [
+      {name: 'connected', from: 'loading', to: 'ready'},
+      {name: 'ui_button_pressed', from: 'ready', to: 'waiting_for_photo'},
+      {name: 'photo_saved', from: 'waiting_for_photo', to: 'review_photo'},
+      {name: 'photo_updated', from: 'review_photo', to: 'next_photo'},
+      {name: 'continue_partial_set', from: 'next_photo', to: 'waiting_for_photo'},
+      {name: 'finish_set', from: 'next_photo', to: 'review_composited'},
+      {name: 'next_set', from: 'review_composited', to: 'ready'}
+    ],
+    callbacks: {
+      onconnected: function () {
+        self.photoView.animate('in', function () {
+          //self.buttonView.fadeIn();
+        });
+      },
+      onenterready: function () {
+        self.photoView.resetState();
+      },
+      onleaveready: function () {
+      },
+      onenterwaiting_for_photo: function (e) {
+        cheeseCb = function () {
+          self.photoView.modalMessage('Cheese!', self.config.cheese_delay);
+          self.photoView.flashStart();
+          self.socket.emit('snap', true);
         }
-    });
+        CameraUtils.snap(self.appState.current_frame_idx, cheeseCb);
+
+        fallback = setTimeout(function() {
+          console.log('konnte kein bild aufnehmen')
+          self.photoView.flashEnd();
+          self.photoView.animate('out');
+          self.photoView.modalMessageBig('Die Kamera konnte kein Bild aufnehmen, bitte versuche es erneut!', 8000, 200, function () {
+            location.reload();
+          });
+        }, 10000)
+
+      },
+      onphoto_saved: function (e, f, t, data) {
+
+        clearTimeout(fallback);
+
+        // update UI
+        // By the time we get here, the idx has already been updated!!
+        self.photoView.flashEnd();
+        self.photoView.updatePhotoSet(data.web_url, self.appState.current_frame_idx, function () {
+          setTimeout(function () {
+            self.fsm.photo_updated();
+          }, self.config.between_snap_delay)
+        });
+      },
+      onphoto_updated: function (e, f, t) {
+        self.photoView.flashEnd();
+        // We're done with the full set.
+        if (self.appState.current_frame_idx == 3) {
+          self.fsm.finish_set();
+        }
+        // Move the frame index up to the next frame to update.
+        else {
+          self.appState.current_frame_idx = (self.appState.current_frame_idx + 1) % 4
+          self.fsm.continue_partial_set();
+        }
+      },
+      onenterreview_composited: function (e, f, t) {
+        self.socket.emit('composite');
+        self.photoView.showOverlay(true);
+        setTimeout(function () {
+          self.fsm.next_set()
+        }, self.config.next_delay);
+      },
+      onleavereview_composited: function (e, f, t) {
+        // Clean up
+        self.photoView.animate('out');
+        console.log('Drucken?');
+
+        $(window).bind('click', function () {
+
+          self.socket.emit('print', true);
+          $(this).unbind('click');
+
+          printtext.remove();
+          isPrinting = true;
+
+          self.photoView.modalMessageBig('Dein Bild wird gedruckt, bitte einen Augenblick geduld!', 15000, 200, function () {
+
+            //remove click handler
+            console.log('delete listener');
+            $(window).unbind('click');
+
+            /**
+             * Instead of loading next slide, do a reload
+             * for garbage collection.
+             */
+            //self.photoView.slideInNext();
+            location.reload();
+          });
+        });
+
+        var printtext = self.photoView.modalMessageBig('Drücke erneut um das Bild zu drucken!', 10000, 200, function () {
+
+          console.log('Printing: ' + isPrinting);
+
+          if(isPrinting) {
+            console.log('do nothing!');
+            return false;
+          }
+
+          //remove click handler
+          console.log('delete listener');
+          $(window).unbind('click');
+
+          /**
+           * Instead of loading next slide, do a reload
+           * for garbage collection.
+           */
+          location.reload();
+          //self.photoView.slideInNext();
+        });
+      },
+      onchangestate: function (e, f, t) {
+        console.log('fsm received event ' + e + ', changing state from ' + f + ' to ' + t)
+      }
+    }
+  });
 }
 
 /**
@@ -639,6 +679,8 @@ var PhotoView = Backbone.View.extend({
       txt.remove();
       if (cb) cb();
     }, persistTime, all);
+
+    return txt;
   },
 
   /**
@@ -675,14 +717,14 @@ var ButtonView = function (fsm) {
 ButtonView.prototype.render = function () {
     var self = this;
     // init code
-    this.startButton = $('button#start-button');
-    var buttonX = (Config.window_width - this.startButton.outerWidth())/2;
-    var buttonY = (Config.window_height - this.startButton.outerHeight())/2;
+    // this.startButton = $('button#start-button');
+    // var buttonX = (Config.window_width - this.startButton.outerWidth())/2;
+    // var buttonY = (Config.window_height - this.startButton.outerHeight())/2;
 
-    this.startButton.hide();
+    // this.startButton.hide();
 
     // Position the start button in the center
-    this.startButton.css({'top': buttonY, 'left': buttonX});
+    // this.startButton.css({'top': buttonY, 'left': buttonX});
 
     //var buttonTriggerEvt = Config.is_mobile ? "touchend" : "click";
 
@@ -690,7 +732,6 @@ ButtonView.prototype.render = function () {
     $(document).bind('click', function () {
         $(document).trigger('ui_button_pressed');
         $(this).unbind('click');
-        this.startButton.hide();
     });
 
     $(document).bind('ui_button_pressed', function () {
@@ -699,34 +740,31 @@ ButtonView.prototype.render = function () {
     });
 }
  ButtonView.prototype.fadeIn = function() {
-  this.startButton.fadeIn();
+  // this.startButton.fadeIn();
 }
 
 // Everything required to set up the app.
 $(window).ready(function () {
 
-  //little timeout e.g. chrome startup is not fast enough and widh and height are not set correctly
-  setTimeout(function() {
-    console.log('start');
-    var socketProxy = new SocketProxy();
-    var appState = new AppState();
+  console.log('start');
+  var socketProxy = new SocketProxy();
+  var appState = new AppState();
 
-    window.io = window.io || undefined;
+  window.io = window.io || undefined;
 
-    window.p = new PhotoView(window.Config, appState);
-    bv = new ButtonView();
+  window.p = new PhotoView(window.Config, appState);
+  bv = new ButtonView();
 
-    var ssm = new ShmileStateMachine(window.p, socketProxy, appState, window.Config, bv)
+  var ssm = new ShmileStateMachine(window.p, socketProxy, appState, window.Config, bv)
 
-    bv.fsm = ssm.fsm
+  bv.fsm = ssm.fsm
 
-    var layer = new SocketLayer(window.io, socketProxy)
-    layer.init();
-    layer.register(ssm.fsm);
+  var layer = new SocketLayer(window.io, socketProxy)
+  layer.init();
+  layer.register(ssm.fsm);
 
-    window.socketProxy = socketProxy
+  window.socketProxy = socketProxy
 
-    bv.render();
-    p.render();
-  }, 500)
+  bv.render();
+  p.render();
 });

@@ -6,7 +6,7 @@ var Config = {
   next_delay: 10000,
   cheese_delay: 400,
   flash_duration: 1000,
-  ready_delay: 2000,
+  ready_delay: 3000,
   nice_delay: 5000,
 
   // The amount of time we should pause between each frame shutter
@@ -16,5 +16,5 @@ var Config = {
   between_snap_delay: 1000,
 
   // For usability enhancements on iPad, set this to "true"
-  is_mobile: false
+  is_mobile: true
 }

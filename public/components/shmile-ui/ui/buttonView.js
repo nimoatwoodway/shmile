@@ -5,14 +5,14 @@ var ButtonView = function (fsm) {
 ButtonView.prototype.render = function () {
     var self = this;
     // init code
-    this.startButton = $('button#start-button');
-    var buttonX = (Config.window_width - this.startButton.outerWidth())/2;
-    var buttonY = (Config.window_height - this.startButton.outerHeight())/2;
+    // this.startButton = $('button#start-button');
+    // var buttonX = (Config.window_width - this.startButton.outerWidth())/2;
+    // var buttonY = (Config.window_height - this.startButton.outerHeight())/2;
 
-    this.startButton.hide();
+    // this.startButton.hide();
 
     // Position the start button in the center
-    this.startButton.css({'top': buttonY, 'left': buttonX});
+    // this.startButton.css({'top': buttonY, 'left': buttonX});
 
     //var buttonTriggerEvt = Config.is_mobile ? "touchend" : "click";
 
@@ -20,7 +20,6 @@ ButtonView.prototype.render = function () {
     $(document).bind('click', function () {
         $(document).trigger('ui_button_pressed');
         $(this).unbind('click');
-        this.startButton.hide();
     });
 
     $(document).bind('ui_button_pressed', function () {
@@ -29,5 +28,5 @@ ButtonView.prototype.render = function () {
     });
 }
  ButtonView.prototype.fadeIn = function() {
-  this.startButton.fadeIn();
+  // this.startButton.fadeIn();
 }

@@ -353,6 +353,8 @@ var PhotoView = Backbone.View.extend({
       txt.remove();
       if (cb) cb();
     }, persistTime, all);
+
+    return txt;
   },
 
   /**
