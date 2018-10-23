@@ -10,7 +10,8 @@ html, body {
 body {
     background-color: #333;
     text-align: center;
-    background: url(/images/bg_linen.png)
+    background: url(/images/bg_wood.jpg);
+    background-size: cover;
 }
 
 #viewport {
