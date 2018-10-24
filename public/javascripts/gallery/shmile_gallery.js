@@ -18,8 +18,8 @@ socket.on('connect', function() {
 });
 
 // Everytime a new image is saved, notify and update the PhotoSwipe view.
-socket.on('generated_thumb', function(url) {
-  console.log('generated_thumb evt: '+url);
+socket.on('composited_image', function(url) {
+  console.log('composited_image evt: '+url);
 
   // A generated thumb means I need to add it to the slideshow.
   var a = $('<a/>')
