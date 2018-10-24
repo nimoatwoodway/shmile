@@ -41,7 +41,7 @@ exp.get "/gallery", (req, res) ->
   res.render "gallery",
     title: "gallery!"
     extra_css: ["photoswipe/photoswipe"]
-    image_paths: PhotoFileUtils.composited_images(true)
+    image_paths: PhotoFileUtils.composited_images(true, true)
 
 
 # FIXME/ahao This global state is no bueno.
