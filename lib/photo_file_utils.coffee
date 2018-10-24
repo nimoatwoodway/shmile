@@ -1,7 +1,7 @@
 fs = require("fs")
 PhotoFileUtils = (->
-  GENERATED_PHOTOS_PATH = "/home/pi/Nextcloud/Hochzeit"
-  GENERATED_THUMBS_PATH = "/home/pi/Nextcloud/Hochzeit"
+  GENERATED_PHOTOS_PATH = "public/photos/printed"
+  GENERATED_THUMBS_PATH = "public/photos/printed"
   composited_images = (wantUrlPrefix, wantFullSize) ->
     path = (if (wantFullSize) then GENERATED_PHOTOS_PATH else GENERATED_THUMBS_PATH)
     files = fs.readdirSync(path)
