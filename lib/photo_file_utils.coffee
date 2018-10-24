@@ -1,7 +1,7 @@
 fs = require("fs")
 PhotoFileUtils = (->
-  GENERATED_PHOTOS_PATH = "public/photos/printed"
-  GENERATED_THUMBS_PATH = "public/photos/printed"
+  GENERATED_PHOTOS_PATH = "public/photos/generated"
+  GENERATED_THUMBS_PATH = "public/photos/generated/thumbs"
   composited_images = (wantUrlPrefix, wantFullSize) ->
     path = (if (wantFullSize) then GENERATED_PHOTOS_PATH else GENERATED_THUMBS_PATH)
     files = fs.readdirSync(path)
