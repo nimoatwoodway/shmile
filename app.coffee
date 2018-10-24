@@ -97,7 +97,7 @@ io.sockets.on "connection", (websocket) ->
       websocket.broadcast.emit "composited_image", PhotoFileUtils.photo_path_to_url(output_file_path)
 
     compositer.on "generated_thumb", (thumb_path) ->
-      websocket.broadcast.emit "generated_thumb", PhotoFileUtils.photo_path_to_url(thumb_path)
+      websocket.broadcast.emit "generated_thumb", PhotoFileUtils.photo_path_to_url(output_file_path)
 
   websocket.on "print", () ->
     sys.puts "Print that thing"
