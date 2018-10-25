@@ -24,10 +24,9 @@ class CameraControl
     emitter.on "snap", (onCaptureSuccess, onSaveSuccess) =>
       emitter.emit "camera_begin_snap"
       capture = spawn("gphoto2", [ "--capture-image-and-download",
-                                   "--force-overwrite",
-                                   "--set-config",
-                                   "capturetarget=1",
                                    "--keep-raw",
+                                   "--force-overwrite",
+                                   "--set-config=capturetarget=1",
                                    "--filename=" + @filename ],
         cwd: @cwd
       )
